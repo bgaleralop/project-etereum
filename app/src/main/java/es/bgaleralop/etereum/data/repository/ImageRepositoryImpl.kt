@@ -9,6 +9,8 @@ import android.provider.MediaStore
 import es.bgaleralop.etereum.domain.images.model.ImageFormat
 import es.bgaleralop.etereum.domain.images.repository.ImageRepository
 import es.bgaleralop.etereum.domain.images.services.toRawByteArray
+import es.bgaleralop.etereum.domain.images.utils.MAX_HEIGHT
+import es.bgaleralop.etereum.domain.images.utils.MAX_WIDTH
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -75,6 +77,15 @@ class ImageRepositoryImpl (
     override suspend fun openImage(uri: Uri): Result<ByteArray> = withContext(Dispatchers.IO) {
         return@withContext try {
             val resolver = context.contentResolver
+            val options = BitmapFactory.Options().apply {
+                inJustDecodeBounds = true // Solo leemos las dimensiones.
+            }
+
+            context.contentResolver.openInputStream(uri)?.use {
+                BitmapFactory.decodeStream(it, null, options)
+            }
+            options.inSampleSize = calculateInSampleSize(options, MAX_WIDTH, MAX_HEIGHT)
+            options.inJustDecodeBounds = false
 
             // Abrimos el flujo de entrada
             val inputStream = resolver.openInputStream(uri)
@@ -91,5 +102,23 @@ class ImageRepositoryImpl (
         } catch (e: Exception) {
             Result.failure(e)
         }
+    }
+
+    private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+        val (height: Int, width: Int) = options.run { outHeight to outWidth }
+        var inSampleSize = 1
+
+        if(height > reqHeight || width > reqWidth) {
+            val halfHeight: Int = height / 2
+            val halfWidth: Int = width / 2
+
+            // Calcula el valor más grande de inSampleSize que sea potencia de 2
+            // y mantenga tanto la altura como la anchura mayores que las requeridas.
+            while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
+                inSampleSize *= 2
+            }
+        }
+
+        return inSampleSize
     }
 }
