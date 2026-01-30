@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import dagger.hilt.android.qualifiers.ApplicationContext
 import es.bgaleralop.etereum.domain.images.model.ImageFormat
 import es.bgaleralop.etereum.domain.images.repository.ImageRepository
 import es.bgaleralop.etereum.domain.images.services.toRawByteArray
@@ -13,9 +14,10 @@ import es.bgaleralop.etereum.domain.images.utils.MAX_HEIGHT
 import es.bgaleralop.etereum.domain.images.utils.MAX_WIDTH
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class ImageRepositoryImpl (
-    val context: Context
+class ImageRepositoryImpl @Inject constructor(
+    @ApplicationContext val context: Context
 ) : ImageRepository {
     override suspend fun saveImage(
         bitmap: ByteArray,
