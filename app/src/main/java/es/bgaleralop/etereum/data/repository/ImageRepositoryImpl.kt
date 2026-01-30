@@ -2,21 +2,21 @@ package es.bgaleralop.etereum.data.repository
 
 import android.content.ContentValues
 import android.content.Context
-import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import es.bgaleralop.etereum.domain.images.model.ImageFormat
 import es.bgaleralop.etereum.domain.images.repository.ImageRepository
+import es.bgaleralop.etereum.domain.images.services.toRawByteArray
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.OutputStream
 
 class ImageRepositoryImpl (
     val context: Context
 ) : ImageRepository {
     override suspend fun saveImage(
-        bitmap: Bitmap,
+        bitmap: ByteArray,
         fileName: String,
         folder: String,
         format: ImageFormat,
@@ -57,13 +57,6 @@ class ImageRepositoryImpl (
             ?: return@withContext Result.failure(Exception("Error al crear el registro en MediaStore"))
 
         return@withContext try {
-            val outputStream: OutputStream? = resolver.openOutputStream(uri)
-            outputStream?.use { stream ->
-                if(!bitmap.compress(getCompressFormat(format), quality, stream)) {
-                   throw Exception("Fallo la compresión del bitmap")
-                }
-            }
-
             // Liberar el archivo para que sea visible por el sistema
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 imageDetails.clear()
@@ -79,15 +72,24 @@ class ImageRepositoryImpl (
         }
     }
 
-    override suspend fun openImage(uri: Uri): Result<Bitmap> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun openImage(uri: Uri): Result<ByteArray> = withContext(Dispatchers.IO) {
+        return@withContext try {
+            val resolver = context.contentResolver
 
-    private fun getCompressFormat(format: ImageFormat): Bitmap.CompressFormat {
-        return when(format) {
-            ImageFormat.PNG -> Bitmap.CompressFormat.PNG
-            ImageFormat.JPEG -> Bitmap.CompressFormat.JPEG
-            ImageFormat.WEBP -> Bitmap.CompressFormat.WEBP
+            // Abrimos el flujo de entrada
+            val inputStream = resolver.openInputStream(uri)
+                ?: throw Exception("No se puede abrir el archivo")
+
+            inputStream.use { stream ->
+                val bitmap = BitmapFactory.decodeStream(stream)
+                if (bitmap != null) {
+                    Result.success(bitmap.toRawByteArray())
+                } else {
+                    Result.failure(Exception("Error al decodificar la imagen: Formato no soportado"))
+                }
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 }
