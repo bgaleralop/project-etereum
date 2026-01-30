@@ -2,7 +2,7 @@ package es.bgaleralop.etereum.domain.images.repository
 
 import android.graphics.Bitmap
 import android.net.Uri
-import es.bgaleralop.etereum.domain.images.model.OutputFormat
+import es.bgaleralop.etereum.domain.images.model.ImageFormat
 
 interface ImageRepository {
     /**
@@ -20,7 +20,7 @@ interface ImageRepository {
         bitmap: Bitmap,
         fileName: String,
         folder: String,
-        format: OutputFormat,
+        format: ImageFormat,
         quality: Int
     ): Result<Uri>
 

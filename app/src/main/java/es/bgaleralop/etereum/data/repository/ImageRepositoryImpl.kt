@@ -6,7 +6,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import es.bgaleralop.etereum.domain.images.model.OutputFormat
+import es.bgaleralop.etereum.domain.images.model.ImageFormat
 import es.bgaleralop.etereum.domain.images.repository.ImageRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -19,16 +19,16 @@ class ImageRepositoryImpl (
         bitmap: Bitmap,
         fileName: String,
         folder: String,
-        format: OutputFormat,
+        format: ImageFormat,
         quality: Int
     ): Result<Uri> = withContext(Dispatchers.IO) {
         val resolver = context.contentResolver
 
         // Configurar el formato de compresión y la extensión
         val extension = when (format) {
-            OutputFormat.WEBP -> "webp"
-            OutputFormat.PNG -> "png"
-            OutputFormat.JPEG -> "jpeg"
+            ImageFormat.WEBP -> "webp"
+            ImageFormat.PNG -> "png"
+            ImageFormat.JPEG -> "jpeg"
         }
 
         // Definir la ruta relativa (Carpeta de Mision)
@@ -83,11 +83,11 @@ class ImageRepositoryImpl (
         TODO("Not yet implemented")
     }
 
-    private fun getCompressFormat(format: OutputFormat): Bitmap.CompressFormat {
+    private fun getCompressFormat(format: ImageFormat): Bitmap.CompressFormat {
         return when(format) {
-            OutputFormat.PNG -> Bitmap.CompressFormat.PNG
-            OutputFormat.JPEG -> Bitmap.CompressFormat.JPEG
-            OutputFormat.WEBP -> Bitmap.CompressFormat.WEBP
+            ImageFormat.PNG -> Bitmap.CompressFormat.PNG
+            ImageFormat.JPEG -> Bitmap.CompressFormat.JPEG
+            ImageFormat.WEBP -> Bitmap.CompressFormat.WEBP
         }
     }
 }
