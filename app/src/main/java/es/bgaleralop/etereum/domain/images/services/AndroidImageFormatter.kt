@@ -42,7 +42,7 @@ class AndroidImageFormatter : ImageFormatter {
 
         // Devolvemos el bitmap procesado.
         Result.success(ImageProcessResult(
-            image = imageBytes,
+            image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size),
             weightInKb = imageBytes.size / 1024,
             isSanitized = false
         ))
