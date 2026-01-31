@@ -28,7 +28,7 @@ class ImageRepositoryImpl @Inject constructor(
     ): Result<Uri> = withContext(Dispatchers.IO) {
         val resolver = context.contentResolver
 
-        // Configurar el formato de compresión y la extensión
+        // Configurar la extensión
         val extension = when (format) {
             ImageFormat.WEBP -> "webp"
             ImageFormat.PNG -> "png"
