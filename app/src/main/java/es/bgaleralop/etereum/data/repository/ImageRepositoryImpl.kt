@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import es.bgaleralop.etereum.domain.images.model.ImageFormat
 import es.bgaleralop.etereum.domain.images.repository.ImageRepository
@@ -19,6 +20,8 @@ import javax.inject.Inject
 class ImageRepositoryImpl @Inject constructor(
     @ApplicationContext val context: Context
 ) : ImageRepository {
+    private val TAG: String = "ETEREUM ImageReporitory: "
+
     override suspend fun saveImage(
         bitmap: ByteArray,
         fileName: String,
@@ -70,6 +73,8 @@ class ImageRepositoryImpl @Inject constructor(
 
             Result.success(uri)
         } catch (e: Exception) {
+            Log.e(TAG, "${e.message}")
+            Log.d(TAG, "Limpiando uri: $uri")
             // Limpiar si falla
             resolver.delete(uri, null, null)
             Result.failure(e)
@@ -77,6 +82,8 @@ class ImageRepositoryImpl @Inject constructor(
     }
 
     override suspend fun openImage(uri: Uri): Result<ByteArray> = withContext(Dispatchers.IO) {
+        Log.i(TAG, "Abriendo imagen $uri")
+
         return@withContext try {
             val resolver = context.contentResolver
             val options = BitmapFactory.Options().apply {
@@ -98,15 +105,17 @@ class ImageRepositoryImpl @Inject constructor(
                 if (bitmap != null) {
                     Result.success(bitmap.toRawByteArray())
                 } else {
-                    Result.failure(Exception("Error al decodificar la imagen: Formato no soportado"))
+                    throw Exception("Error al decodificar la imagen: Formato no soportado")
                 }
             }
         } catch (e: Exception) {
+            Log.e(TAG, "${e.message}")
             Result.failure(e)
         }
     }
 
     private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+        Log.i(TAG, "Calculando tamaño de imagen")
         val (height: Int, width: Int) = options.run { outHeight to outWidth }
         var inSampleSize = 1
 
@@ -120,7 +129,7 @@ class ImageRepositoryImpl @Inject constructor(
                 inSampleSize *= 2
             }
         }
-
+        Log.d(TAG, "Tamaño de imagen: $inSampleSize")
         return inSampleSize
     }
 }

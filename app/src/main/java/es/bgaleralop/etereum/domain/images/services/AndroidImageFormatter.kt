@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.Paint
+import android.util.Log
 import androidx.core.graphics.createBitmap
 import es.bgaleralop.etereum.domain.images.model.ImageFormat
 import es.bgaleralop.etereum.domain.images.model.ImageProcessResult
@@ -20,11 +21,14 @@ import java.nio.ByteBuffer
  * Implementacion de ImageFormatter para Android
  */
 class AndroidImageFormatter : ImageFormatter {
+    private val TAG = "ETEREUM ImageFormatter: "
+
     override suspend fun compress(
         inputBytes: ByteArray,
         quality: Int,
         format: ImageFormat
     ): Result<ImageProcessResult> = withContext(Dispatchers.Default) {
+        Log.d(TAG, "Comprimiendo imagen a formato ${format.name} y calidad $quality%")
 
         val compressFormat = getCompressFormat(format)
 
@@ -45,6 +49,8 @@ class AndroidImageFormatter : ImageFormatter {
     }
 
     override suspend fun toGrayScale(image: ByteArray): ByteArray {
+        Log.d(TAG, "Convirtiendo a escala de grises")
+
         val bitmap = BitmapFactory.decodeByteArray(image, 0, image.size)
         val width = bitmap.width
         val height = bitmap.height
@@ -69,6 +75,8 @@ class AndroidImageFormatter : ImageFormatter {
         image: ByteArray,
         rectangle: Rectangle
     ): ByteArray {
+        Log.d(TAG, "Recortando imagen")
+
         val bitmap = BitmapFactory.decodeByteArray(image, 0, image.size)
 
         val resizedBitmap = Bitmap.createBitmap(
