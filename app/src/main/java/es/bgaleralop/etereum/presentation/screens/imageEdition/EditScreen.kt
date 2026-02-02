@@ -6,16 +6,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.tooling.preview.Preview
-import es.bgaleralop.etereum.presentation.theme.EtereumTheme
 
 @Composable
-fun EditScreen(modifier: Modifier) {
+fun EditScreen(
+    state: ImageEditState,
+    onAction: (ImageAction) -> Unit,
+    modifier: Modifier
+) {
     val TAG = "ETEREUM EditScreen: "
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
@@ -25,44 +25,51 @@ fun EditScreen(modifier: Modifier) {
     if(isPortrait) {
         Log.d(TAG, "Orientación: Portrait")
         // OPCION 1: MOVIL PORTRAIT (Vertical)
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = modifier.fillMaxSize()) {
             Box(modifier = Modifier.weight(1.2f)) {
-                ComparisonSliderLayout(null, null)
+                ComparisonSliderLayout(original = state.originalBitmap?.image, modified = state.modifiedBitmap?.image)
             }
-            ImageControlPanel()
+            ImageControlPanel(
+                state = state,
+                onAction = onAction
+            )
         }
     } else {
         Log.d(TAG, "Orientación: Landscape")
         // OPCION 2: MOVIL LANDSCAPE (Horizontal) O TABLET
-        Row(modifier = Modifier.fillMaxSize()) {
+        Row(modifier = modifier.fillMaxSize()) {
             Box(modifier = Modifier.weight(1.2f)) {
-                ComparisonSideBySideLayout(null, null)
+                ComparisonSideBySideLayout(original = state.originalBitmap?.image, modified = state.modifiedBitmap?.image)
             }
-            ImageControlPanel(modifier = Modifier.weight(0.7f))
+            ImageControlPanel(
+                state = state,
+                onAction = onAction,
+                modifier = Modifier.weight(0.7f)
+            )
         }
     }
 }
 
 
 
-@Preview(showBackground = true, showSystemUi = true, name = "Portrait")
-@Composable
-fun EditScreenPreview() {
-    EtereumTheme {
-        Scaffold { innerPadding ->
-            EditScreen(modifier = Modifier.fillMaxSize().padding(innerPadding))
-        }
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true, name = "LandScape",
-    device = "spec:parent=pixel_5,orientation=landscape"
-)
-@Composable
-fun EditScreenPreviewLandScape() {
-    EtereumTheme {
-        Scaffold { innerPadding ->
-            EditScreen(modifier = Modifier.fillMaxSize().padding(innerPadding))
-        }
-    }
-}
+//@Preview(showBackground = true, showSystemUi = true, name = "Portrait")
+//@Composable
+//fun EditScreenPreview() {
+//    EtereumTheme {
+//        Scaffold { innerPadding ->
+//            EditScreen(modifier = Modifier.fillMaxSize().padding(innerPadding))
+//        }
+//    }
+//}
+//
+//@Preview(showBackground = true, showSystemUi = true, name = "LandScape",
+//    device = "spec:parent=pixel_5,orientation=landscape"
+//)
+//@Composable
+//fun EditScreenPreviewLandScape() {
+//    EtereumTheme {
+//        Scaffold { innerPadding ->
+//            EditScreen(modifier = Modifier.fillMaxSize().padding(innerPadding))
+//        }
+//    }
+//}

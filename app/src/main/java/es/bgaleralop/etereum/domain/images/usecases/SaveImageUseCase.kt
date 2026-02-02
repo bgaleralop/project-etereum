@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import es.bgaleralop.etereum.domain.images.model.ImageFormat
 import es.bgaleralop.etereum.domain.images.repository.ImageRepository
-import es.bgaleralop.etereum.domain.images.services.toRawByteArray
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -26,7 +25,7 @@ class SaveImageUseCase @Inject constructor(
         params: SaveParams
     ): Result<Uri> = withContext(Dispatchers.IO){
         val uri = imageRepository.saveImage(
-            bitmap = bitmap.toRawByteArray(),
+            bitmap = bitmap,
             fileName = params.fileName,
             folder = params.folder,
             format = params.format,

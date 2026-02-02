@@ -2,7 +2,6 @@ package es.bgaleralop.etereum.presentation.screens.imageEdition
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,7 +27,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EditorViewModel @Inject constructor(
-    imageUri: Uri? = null,
     @ApplicationContext private val context: Context,
     private val saveImageUseCase: SaveImageUseCase,
     private val transformer: TransformImageUseCase,
@@ -45,11 +43,7 @@ class EditorViewModel @Inject constructor(
 
     init {
         Log.d(TAG, "Iniciado...")
-        if(imageUri != null) {
-            onAction(ImageAction.LoadImage(imageUri))
-        } else {
-            loadResourceImage(R.drawable.pict1571)
-        }
+        loadResourceImage(R.drawable.pict1571)
     }
 
     fun onAction(action: ImageAction) {
@@ -131,9 +125,8 @@ class EditorViewModel @Inject constructor(
     }
 
     private fun processInRealTime() {
-        Log.d(TAG, "Procesando imagen en tiempo real...")
         if (state.originalBitmap != null) {
-
+            Log.d(TAG, "original bitmap: ${state.originalBitmap}")
             viewModelScope.launch(Dispatchers.Default) {
                 //Aquí se genera el modifiedBitmap
                 val result = transformer.compressImage(

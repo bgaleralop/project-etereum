@@ -24,15 +24,13 @@ class AndroidImageFormatter : ImageFormatter {
     private val TAG = "ETEREUM ImageFormatter: "
 
     override suspend fun compress(
-        inputBytes: ByteArray,
+        bitmap: Bitmap,
         quality: Int,
         format: ImageFormat
     ): Result<ImageProcessResult> = withContext(Dispatchers.Default) {
-        Log.d(TAG, "Comprimiendo imagen a formato ${format.name} y calidad $quality%")
+        Log.d(TAG, "Comprimiendo imagen $bitmap a formato ${format.name} y calidad $quality%")
 
         val compressFormat = getCompressFormat(format)
-
-        val bitmap = BitmapFactory.decodeByteArray(inputBytes, 0, inputBytes.size)
 
         val outputStream = ByteArrayOutputStream()
 
@@ -48,12 +46,13 @@ class AndroidImageFormatter : ImageFormatter {
         ))
     }
 
-    override suspend fun toGrayScale(image: ByteArray): ByteArray {
+    override suspend fun toGrayScale(image: Bitmap): Bitmap {
         Log.d(TAG, "Convirtiendo a escala de grises")
 
-        val bitmap = BitmapFactory.decodeByteArray(image, 0, image.size)
-        val width = bitmap.width
-        val height = bitmap.height
+        Log.d("ETEREUM DEPURADOR: SOLUCIONANDO FALLO NULLPOINTEREXCEPTION", "BITMAP: $image")
+
+        val width = image.width
+        val height = image.height
         val bmpGrayscale = createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bmpGrayscale)
         val paint = Paint()
@@ -62,42 +61,49 @@ class AndroidImageFormatter : ImageFormatter {
         val colorMatrix = ColorMatrix().apply { setSaturation(0f) }
         paint.colorFilter = ColorMatrixColorFilter(colorMatrix)
 
-        canvas.drawBitmap(bitmap, 0f, 0f, paint)
+        canvas.drawBitmap(image, 0f, 0f, paint)
 
-        return bmpGrayscale.toRawByteArray()
+        return bmpGrayscale
     }
 
-    override suspend fun sanitize(image: ByteArray): ByteArray {
+    override suspend fun sanitize(image: Bitmap): Bitmap {
         return image
     }
 
     override suspend fun resize(
-        image: ByteArray,
+        image: Bitmap,
         rectangle: Rectangle
-    ): ByteArray {
+    ): Bitmap {
         Log.d(TAG, "Recortando imagen")
 
-        val bitmap = BitmapFactory.decodeByteArray(image, 0, image.size)
-
         val resizedBitmap = Bitmap.createBitmap(
-            bitmap,
+            image,
             rectangle.x.coerceAtLeast(0),
             rectangle.y.coerceAtLeast(0),
-            rectangle.width.coerceIn(1, bitmap.width - rectangle.x),
-            rectangle.height.coerceIn(1, bitmap.height - rectangle.y)
+            rectangle.width.coerceIn(1, image.width - rectangle.x),
+            rectangle.height.coerceIn(1, image.height - rectangle.y)
         )
 
-        return resizedBitmap.toRawByteArray()
+        return resizedBitmap
     }
 }
 
 fun Bitmap.toRawByteArray(): ByteArray {
-    // Calculamos el tamaño: cada pixel en ARGB_8888 ocupa 4 bytes
     val size = this.byteCount
     val buffer = ByteBuffer.allocate(size)
 
-    // Copiamos lso pixeles del bitmap al buffer
+    // 1. Aseguramos que el buffer esté al inicio
+    buffer.rewind()
+
+    // 2. Copiamos los píxeles
     this.copyPixelsToBuffer(buffer)
 
-    return buffer.array()
+    // 3. ¡IMPORTANTE! Retrocedemos el puntero al inicio antes de leer
+    buffer.rewind()
+
+    // 4. Extraemos los bytes de forma segura
+    val byteArray = ByteArray(size)
+    buffer.get(byteArray)
+
+    return byteArray
 }

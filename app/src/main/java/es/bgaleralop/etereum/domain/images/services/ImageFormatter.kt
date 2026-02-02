@@ -1,5 +1,6 @@
 package es.bgaleralop.etereum.domain.images.services
 
+import android.graphics.Bitmap
 import es.bgaleralop.etereum.domain.images.model.ImageFormat
 import es.bgaleralop.etereum.domain.images.model.ImageProcessResult
 import es.bgaleralop.etereum.domain.images.utils.Rectangle
@@ -15,7 +16,7 @@ interface ImageFormatter {
      * @return ImageProcessResult conteniendo la imagen comprida o failure en caso de fallo.
      */
     suspend fun compress(
-        inputBytes: ByteArray,
+        bitmap: Bitmap,
         quality: Int,
         format: ImageFormat
     ): Result<ImageProcessResult>
@@ -26,12 +27,12 @@ interface ImageFormatter {
      * @param image La imagen a convertir.
      * @return La imagen en escala de grises.
      */
-    suspend fun toGrayScale(image: ByteArray): ByteArray
+    suspend fun toGrayScale(image: Bitmap): Bitmap
 
     /**
      * Borra los metadatos de la imagen
      */
-    suspend fun sanitize(image: ByteArray): ByteArray
+    suspend fun sanitize(image: Bitmap): Bitmap
 
     /**
      * Recorta el tamaño de una imagen.
@@ -39,5 +40,5 @@ interface ImageFormatter {
      * @param image La imagen a recortar.
      * @param rectangle El rectángulo con las coordenadas de píxeles(x, y, ancho, alto)
      */
-    suspend fun resize(image: ByteArray, rectangle: Rectangle): ByteArray
+    suspend fun resize(image: Bitmap, rectangle: Rectangle): Bitmap
 }
