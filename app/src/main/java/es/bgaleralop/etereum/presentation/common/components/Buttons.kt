@@ -20,6 +20,7 @@ import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import es.bgaleralop.etereum.presentation.theme.EtereumTheme
+import es.bgaleralop.etereum.presentation.theme.SurfaceGreyVariant
 
 @Composable
 fun MainButton(
@@ -57,7 +58,7 @@ fun SecondaryButton(
             )
         ) {
             Text(text = title, style = MaterialTheme.typography.labelMedium.copy(
-                color = MaterialTheme.colorScheme.onSecondary
+                color = SurfaceGreyVariant
             ), fontWeight = FontWeight.Bold)
         }
     }

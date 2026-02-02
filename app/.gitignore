@@ -1,6 +1,8 @@
 # Archivos de compilación y salida
 *.iml
 .gradle
+/.gradle/*
+/.gradle/*.bin
 /local.properties
 /.idea/caches
 /.idea/libraries
@@ -14,7 +16,7 @@
 .externalNativeBuild
 .cxx
 local.properties
-
+*.properties
 # Log de errores
 gradle.xml
 
