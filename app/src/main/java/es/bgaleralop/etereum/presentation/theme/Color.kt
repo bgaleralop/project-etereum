@@ -10,7 +10,7 @@ val NatoGreenDark = Color(0xFF1B2418)
 
 // Acentos de Acción (Visibilidad media para no delatar posición)
 val TacticalAmber = Color(0xFFFFB300)
-val TacticalAmberDark = Color(0xFFC68400)
+val TacticalAmberDark = Color(0xFFEF3E03)
 
 // Fondos y Superficies (Optimizado para OLED)
 val DeepBlack = Color(0xFF000000)      // Fondo principal
