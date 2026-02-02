@@ -24,8 +24,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.stylusHoverIcon
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import es.bgaleralop.etereum.R
 import es.bgaleralop.etereum.presentation.common.components.MainButton
 import es.bgaleralop.etereum.presentation.common.components.SecondaryButton
 import es.bgaleralop.etereum.presentation.theme.Dimensions
@@ -49,16 +50,16 @@ fun ImageControlPanel(modifier: Modifier = Modifier) {
                 .verticalScroll(rememberScrollState())
         ) {
             // 1. GESTION DE ARCHIVO.
-            Text("CONFIGURACION DE SALIDA", style = MaterialTheme.typography.labelMedium)
+            Text(stringResource(R.string.output_configuration), style = MaterialTheme.typography.labelMedium)
             OutlinedTextField(
                 value = outputName,
                 onValueChange = {outputName = it},
-                label = { Text(text = "Nombre de archivo") },
+                label = { Text(text = stringResource(R.string.file_name)) },
                 modifier = Modifier.fillMaxWidth()
             )
 
             // 2. CALIDAD.
-            Text(text = "CALIDAD: ${(quality * 100).toInt()}%", style = MaterialTheme.typography.labelMedium)
+            Text(text = stringResource(R.string.quality, (quality * 100).toInt()), style = MaterialTheme.typography.labelMedium)
             Slider(
                 value = sliderPosition,
                 onValueChange = { sliderPosition = it },
@@ -68,11 +69,11 @@ fun ImageControlPanel(modifier: Modifier = Modifier) {
             // 3. OPCIONES TÁCTICAS.
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(checked = true, onCheckedChange = { })
-                Text(text = "Escala de Grises", style = MaterialTheme.typography.labelMedium)
+                Text(text = stringResource(R.string.gray_scale), style = MaterialTheme.typography.labelMedium)
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(checked = true, onCheckedChange = { })
-                Text(text = "Sanitizar", style = MaterialTheme.typography.labelMedium)
+                Text(text = stringResource(R.string.sanitize), style = MaterialTheme.typography.labelMedium)
             }
 
             // 4. ACCIONES FINALES
@@ -81,12 +82,12 @@ fun ImageControlPanel(modifier: Modifier = Modifier) {
                 horizontalArrangement = Arrangement.spacedBy(Dimensions.PaddingSmall)
             ) {
                 MainButton(
-                    title = "GUARDAR",
+                    title = stringResource(R.string.save),
                     onClick = { },
                     modifier.weight(0.5f)
                 )
                 SecondaryButton(
-                    title = "ABRIR",
+                    title = stringResource(R.string.open),
                     onClick = {},
                     modifier.weight(0.3f)
                 )
@@ -105,7 +106,9 @@ fun ImageControlPanel(modifier: Modifier = Modifier) {
 fun ImageControlPanelPreview(){
     EtereumTheme {
         Scaffold { innerPadding ->
-            ImageControlPanel(modifier = Modifier.fillMaxSize().padding(innerPadding))
+            ImageControlPanel(modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding))
         }
     }
 }

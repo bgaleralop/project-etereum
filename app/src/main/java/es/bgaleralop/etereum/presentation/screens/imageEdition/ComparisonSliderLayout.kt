@@ -25,9 +25,11 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
+import es.bgaleralop.etereum.R
 import es.bgaleralop.etereum.presentation.theme.Dimensions
 import es.bgaleralop.etereum.presentation.theme.EtereumTheme
 import es.bgaleralop.etereum.presentation.theme.TacticalAmber
@@ -52,12 +54,14 @@ fun ComparisonSliderLayout(
     val modifiedBitmap: ImageBitmap? = remember(modified) { modified?.asImageBitmap() }
     Log.i(TAG, "Iniciado...")
 
-    Box(modifier = Modifier.fillMaxSize().padding(Dimensions.ScreenPadding)) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .padding(Dimensions.ScreenPadding)) {
         // IMAGEN ORIGINAL (FONDO)
         originalBitmap?.let {
             Image(
                 bitmap = it,
-                contentDescription = "Imagen Original",
+                contentDescription = stringResource(R.string.original_image),
                 contentScale = ContentScale.Fit,
                 modifier = Modifier.fillMaxSize()
             )
@@ -67,7 +71,7 @@ fun ComparisonSliderLayout(
         modifiedBitmap?.let { modified ->
             Image(
                 bitmap = modified,
-                contentDescription = "Imagen Modificada",
+                contentDescription = stringResource(R.string.modified_image),
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .fillMaxSize()
@@ -80,7 +84,14 @@ fun ComparisonSliderLayout(
                                 layoutDirection: LayoutDirection,
                                 density: Density
                             ): Outline {
-                                return Outline.Rectangle(Rect(0f, 0f, size.width * sliderPosition, size.height))
+                                return Outline.Rectangle(
+                                    Rect(
+                                        0f,
+                                        0f,
+                                        size.width * sliderPosition,
+                                        size.height
+                                    )
+                                )
                             }
                         }
                     }
@@ -92,7 +103,9 @@ fun ComparisonSliderLayout(
             value = sliderPosition,
             onValueChange = { sliderPosition = it },
             colors = SliderDefaults.colors(thumbColor = TacticalAmber, activeTrackColor = TacticalAmber),
-            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = Dimensions.PaddingMedium)
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = Dimensions.PaddingMedium)
         )
     }
 }

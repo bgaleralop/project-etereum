@@ -1,6 +1,7 @@
 package es.bgaleralop.etereum.presentation.screens.imageEdition
 
 import android.graphics.Bitmap
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -28,6 +29,8 @@ fun ComparisonSideBySideLayout(
     modified: Bitmap?,
     modifier: Modifier = Modifier
 ) {
+    val TAG = "ETEREUM ComparisonSideBySideLayout :"
+
     Row(
         horizontalArrangement = Arrangement.spacedBy(Dimensions.PaddingMedium),
         verticalAlignment = Alignment.CenterVertically,
@@ -39,6 +42,7 @@ fun ComparisonSideBySideLayout(
         // IMAGEN ORIGINAL IZQUIERDA
         Card {
             if(originalBitmap != null) {
+                Log.d(TAG, "Imagen original cargada")
                 Image(
                     bitmap = originalBitmap,
                     contentDescription = "Imagen Original",
@@ -46,6 +50,7 @@ fun ComparisonSideBySideLayout(
                     modifier = Modifier.fillMaxSize().weight(0.5f)
                 )
             } else {
+                Log.w(TAG, "No hay imagen original cargada")
                 Text("No hay imagen cargada", style = MaterialTheme.typography.labelLarge.copy(color = ErrorRed))
             }
         }
@@ -53,6 +58,7 @@ fun ComparisonSideBySideLayout(
         // IMAGEN MODIFICADA DERECHA
         Card {
             if(modifiedBitmap != null) {
+                Log.d(TAG, "Imagen modificada cargada")
                 Image(
                     bitmap = modifiedBitmap,
                     contentDescription = "Imagen Original",
@@ -60,6 +66,7 @@ fun ComparisonSideBySideLayout(
                     modifier = Modifier.fillMaxSize().weight(0.5f)
                 )
             } else {
+                Log.w(TAG, "No hay imagen modificada cargada")
                 Text("No hay imagen cargada", style = MaterialTheme.typography.labelLarge.copy(color = ErrorRed))
             }
         }
