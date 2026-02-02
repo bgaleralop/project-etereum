@@ -1,1 +1,30 @@
+# Archivos de compilación y salida
+*.iml
+.gradle
+/.gradle/*
+/.gradle/*.bin
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
 /build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+*.properties
+# Log de errores
+gradle.xml
+
+# Archivos específicos de la App
+/app/build
+/app/release
+
+# Secretos y claves
+*.jks
+*.keystore
+google-services.json

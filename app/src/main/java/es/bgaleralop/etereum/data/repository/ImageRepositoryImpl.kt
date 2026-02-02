@@ -2,6 +2,7 @@ package es.bgaleralop.etereum.data.repository
 
 import android.content.ContentValues
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
@@ -9,6 +10,7 @@ import android.provider.MediaStore
 import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import es.bgaleralop.etereum.domain.images.model.ImageFormat
+import es.bgaleralop.etereum.domain.images.model.getCompressFormat
 import es.bgaleralop.etereum.domain.images.repository.ImageRepository
 import es.bgaleralop.etereum.domain.images.services.toRawByteArray
 import es.bgaleralop.etereum.domain.images.utils.MAX_HEIGHT
@@ -23,7 +25,7 @@ class ImageRepositoryImpl @Inject constructor(
     private val TAG: String = "ETEREUM ImageReporitory: "
 
     override suspend fun saveImage(
-        bitmap: ByteArray,
+        bitmap: Bitmap,
         fileName: String,
         folder: String,
         format: ImageFormat,
@@ -64,6 +66,11 @@ class ImageRepositoryImpl @Inject constructor(
             ?: return@withContext Result.failure(Exception("Error al crear el registro en MediaStore"))
 
         return@withContext try {
+            resolver.openOutputStream(uri)?.use { outputStream ->
+                val success = bitmap.compress(getCompressFormat(format), quality, outputStream)
+                if (!success) throw Exception("Fallo al comprimir el bitmap")
+                outputStream.flush()
+            } ?: throw Exception("Error al abrir el flujo de salida")
             // Liberar el archivo para que sea visible por el sistema
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 imageDetails.clear()
@@ -101,7 +108,7 @@ class ImageRepositoryImpl @Inject constructor(
                 ?: throw Exception("No se puede abrir el archivo")
 
             inputStream.use { stream ->
-                val bitmap = BitmapFactory.decodeStream(stream)
+                val bitmap = BitmapFactory.decodeStream(stream, null, options)
                 if (bitmap != null) {
                     Result.success(bitmap.toRawByteArray())
                 } else {
@@ -114,7 +121,23 @@ class ImageRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+    suspend fun loadResourceImage(resId: Int): Bitmap {
+        val options = BitmapFactory.Options().apply {
+            inJustDecodeBounds = true
+        }
+
+        BitmapFactory.decodeResource(context.resources, resId, options)
+
+        // Calculamos el factor de reduccion
+        options.inSampleSize = calculateInSampleSize(options)
+
+        // Decodificar realmente con el tamaño reducido.
+        options.inJustDecodeBounds = false
+        val finalBitmap = BitmapFactory.decodeResource(context.resources, resId, options)
+
+        return finalBitmap
+    }
+    private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int = MAX_WIDTH, reqHeight: Int = MAX_HEIGHT): Int {
         Log.i(TAG, "Calculando tamaño de imagen")
         val (height: Int, width: Int) = options.run { outHeight to outWidth }
         var inSampleSize = 1
@@ -132,4 +155,6 @@ class ImageRepositoryImpl @Inject constructor(
         Log.d(TAG, "Tamaño de imagen: $inSampleSize")
         return inSampleSize
     }
+
+
 }

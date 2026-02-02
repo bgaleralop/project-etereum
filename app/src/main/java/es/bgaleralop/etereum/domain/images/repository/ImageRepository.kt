@@ -1,5 +1,6 @@
 package es.bgaleralop.etereum.domain.images.repository
 
+import android.graphics.Bitmap
 import android.net.Uri
 import es.bgaleralop.etereum.domain.images.model.ImageFormat
 
@@ -16,7 +17,7 @@ interface ImageRepository {
      * @return La Uri del recurso guardado o failure en caso de fallo
      */
     suspend fun saveImage(
-        bitmap: ByteArray,
+        bitmap: Bitmap,
         fileName: String,
         folder: String,
         format: ImageFormat,

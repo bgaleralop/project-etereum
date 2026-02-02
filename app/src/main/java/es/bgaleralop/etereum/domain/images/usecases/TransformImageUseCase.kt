@@ -1,11 +1,10 @@
 package es.bgaleralop.etereum.domain.images.usecases
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.util.Log
 import es.bgaleralop.etereum.domain.images.model.ImageFormat
 import es.bgaleralop.etereum.domain.images.model.ImageProcessResult
 import es.bgaleralop.etereum.domain.images.services.ImageFormatter
-import es.bgaleralop.etereum.domain.images.services.toRawByteArray
 import es.bgaleralop.etereum.domain.images.utils.Rectangle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -24,15 +23,16 @@ class TransformImageUseCase @Inject constructor(
         format: ImageFormat = ImageFormat.WEBP
     ): Result<ImageProcessResult> = withContext(Dispatchers.Default) {
         // 1. Creamos el byteArray de la imagen dependiendo de la escala de grises
-        val byteArray = if (isGrayScale) {
-            formatter.toGrayScale(bitmap.toRawByteArray())
+        Log.d("ETEREUM DEPURADOR: SOLUCIONANDO FALLO NULLPOINTEREXCEPTION", "bitmap: $bitmap")
+        val image = if (isGrayScale) {
+            formatter.toGrayScale(bitmap)
         } else {
-            bitmap.toRawByteArray()
+            bitmap
         }
 
         // 2. Comprimimos la imagen
         val result = formatter.compress(
-            inputBytes = byteArray,
+            bitmap = image,
             quality = quality,
             format = format
         )
@@ -57,17 +57,12 @@ class TransformImageUseCase @Inject constructor(
         width: Int,
         height: Int
     ): Result<Bitmap> = withContext(Dispatchers.Default) {
-        val byteArray = bitmap.toRawByteArray()
 
         val result = formatter.resize(
-            image = byteArray,
+            image = bitmap,
             rectangle = Rectangle(left, top, width, height)
         )
 
-        if (result.isNotEmpty()) {
-            return@withContext Result.success(BitmapFactory.decodeByteArray(result, 0, result.size))
-        } else {
-            return@withContext Result.failure(Exception("Error al recortar la imagen"))
-        }
+        return@withContext Result.success(result)
     }
 }
