@@ -4,7 +4,7 @@
     <string name="modified_image">Imagen Modificada</string>
     <string name="output_configuration">CONFIGURACION DE SALIDA</string>
     <string name="file_name">Nombre de archivo</string>
-    <string name="quality">CALIDAD: %1$d%</string>
+    <string name="quality">CALIDAD: %1$d%%</string>
     <string name="gray_scale">Escala de Grises</string>
     <string name="sanitize">Sanitizar</string>
     <string name="save">GUARDAR</string>

@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
@@ -40,7 +41,7 @@ fun ComparisonSideBySideLayout(
         val modifiedBitmap: ImageBitmap? = remember(modified) { modified?.asImageBitmap() }
 
         // IMAGEN ORIGINAL IZQUIERDA
-        Card {
+        Card(modifier = Modifier.fillMaxWidth().weight(0.5f)) {
             if(originalBitmap != null) {
                 Log.d(TAG, "Imagen original cargada")
                 Image(
@@ -56,7 +57,7 @@ fun ComparisonSideBySideLayout(
         }
 
         // IMAGEN MODIFICADA DERECHA
-        Card {
+        Card(modifier = Modifier.fillMaxWidth().weight(0.5f)) {
             if(modifiedBitmap != null) {
                 Log.d(TAG, "Imagen modificada cargada")
                 Image(
