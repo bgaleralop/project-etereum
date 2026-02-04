@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("kotlin-kapt")
     alias(libs.plugins.hilt.gradle)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -59,10 +60,12 @@ dependencies {
     implementation(libs.coil.compose)
     // Icons
     implementation(libs.androidx.compose.material.icons.core)
+    implementation(libs.androidx.compose.material.icons.extended)
 
     // Inyección de dependencias
     implementation(libs.hilt.android)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.navigation.compose)
     kapt(libs.hilt.android.compiler)
 
     testImplementation(libs.junit)
