@@ -37,12 +37,13 @@ fun TacticCard(
     title: String,
     subtitle: String,
     icon: ImageVector,
+    modifier: Modifier = Modifier,
     statusText: String = "STATUS: OPERATIONAL",
     onClick: () -> Unit
 ) {
     Card (
         onClick = onClick,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(200.dp)
             .padding(vertical = Dimensions.PaddingSmall),
