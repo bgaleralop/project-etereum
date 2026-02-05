@@ -64,9 +64,12 @@ dependencies {
 
     // Inyección de dependencias
     implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.navigation.compose)
     kapt(libs.hilt.android.compiler)
+
+    implementation(libs.androidx.datastore.preferences)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

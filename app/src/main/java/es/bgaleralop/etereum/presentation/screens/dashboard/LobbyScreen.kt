@@ -21,9 +21,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import es.bgaleralop.etereum.R
 import es.bgaleralop.etereum.presentation.theme.Dimensions
 import es.bgaleralop.etereum.presentation.theme.EtereumTheme
 
@@ -96,7 +98,7 @@ fun LobbyScreen(
         Spacer(modifier = Modifier.weight(0.1f))
         // Footer de versión
         Text(
-            text = "V1.0.0 // bgalera",
+            text = stringResource(R.string.version),
             color = Color.Gray,
             style = MaterialTheme.typography.bodyMedium.copy(fontSize = 10.sp),
             modifier = Modifier.align(Alignment.CenterHorizontally)

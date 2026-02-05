@@ -10,4 +10,11 @@
     <string name="save">GUARDAR</string>
     <string name="open">ABRIR</string>
     <string name="slice_mode">Modo Slice</string>
+    <string name="siempre_modo_slider">Siempre Modo Slider</string>
+    <string name="configuracion">CONFIGURACION</string>
+    <string name="interfaz">INTERFAZ</string>
+    <string name="almacenamiento">ALMACENAMIENTO</string>
+    <string name="carpeta_almacenamiento">Carpeta Almacenamiento</string>
+    <string name="borrar_original">Borrar Original Tras Proceso</string>
+    <string name="version">ETEREUM v1.0.0//bgalera</string>
 </resources>
