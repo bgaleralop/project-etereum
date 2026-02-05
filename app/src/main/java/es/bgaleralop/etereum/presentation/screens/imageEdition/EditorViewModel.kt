@@ -139,6 +139,7 @@ class EditorViewModel @Inject constructor(
 
                 result.onSuccess {
                     state = state.copy(modifiedBitmap = it)
+                    calculateSavingPercentage()
                 }.onFailure {
                     Log.e(TAG, "Error al procesar imagen: ${it.message}")
                     _uiEvent.send(UiEvent.Error(it.message ?: "Error al procesar imagen"))
@@ -183,6 +184,14 @@ class EditorViewModel @Inject constructor(
                 _uiEvent.send(UiEvent.Error("Fallo en guardado: ${error.message}"))
             }
         }
+    }
+
+    private fun calculateSavingPercentage() {
+        val originalSize = state.originalBitmap?.weightInBytes ?: 0
+        val currentSize = state.modifiedBitmap?.weightInBytes ?: 0
+        val savingPercentage = ((originalSize - currentSize) * 100 / originalSize).toInt()
+
+        state = state.copy(savingPercentage = if(savingPercentage > 0 ) savingPercentage else 0)
     }
 
     private fun loadResourceImage(resId: Int) {
