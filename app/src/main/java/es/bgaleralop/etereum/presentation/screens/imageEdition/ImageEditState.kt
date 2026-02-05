@@ -19,5 +19,8 @@ data class ImageEditState(
     var targetDirectory: String = "",
 
     // Estado de la transformación.
-    var imageStatus: Status = Status.IDLE
+    var imageStatus: Status = Status.IDLE,
+
+    // Formato de visualizacion
+    var isForcedSlider: Boolean = false
 )

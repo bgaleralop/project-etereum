@@ -9,4 +9,5 @@
     <string name="sanitize">Sanitizar</string>
     <string name="save">GUARDAR</string>
     <string name="open">ABRIR</string>
+    <string name="slice_mode">Modo Slice</string>
 </resources>

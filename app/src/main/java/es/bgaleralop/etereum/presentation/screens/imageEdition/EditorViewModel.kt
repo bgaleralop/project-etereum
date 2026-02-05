@@ -121,6 +121,9 @@ class EditorViewModel @Inject constructor(
                 state = state.copy(quality = action.quality)
                 processInRealTime()
             }
+            ImageAction.ToogleSliceMode -> {
+                state = state.copy(isForcedSlider = !state.isForcedSlider)
+            }
         }
     }
 

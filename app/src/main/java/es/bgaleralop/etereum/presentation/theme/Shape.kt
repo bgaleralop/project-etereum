@@ -17,6 +17,7 @@ object Dimensions {
     val PaddingSmall = 8.dp
     val PaddingMedium = 16.dp
     val PaddingLarge = 24.dp
+    val CardCornerRadius = 24.dp
 
     val ScreenPadding = 16.dp    // Margen general de la pantalla
     val ControlSpacing = 12.dp   // Espacio entre controles (sliders, checks)

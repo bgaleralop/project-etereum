@@ -3,6 +3,7 @@ package es.bgaleralop.etereum.presentation.screens.imageEdition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -32,7 +33,9 @@ import es.bgaleralop.etereum.presentation.theme.SurfaceGrey
 fun ImageControlPanel(
     state: ImageEditState,
     onAction: (ImageAction) -> Unit,
-    modifier: Modifier = Modifier) {
+    modifier: Modifier = Modifier,
+    isPortrait: Boolean = true
+) {
     Card(
         colors = CardDefaults.cardColors(containerColor = SurfaceGrey),
         modifier = modifier.padding(Dimensions.ScreenPadding)
@@ -55,7 +58,7 @@ fun ImageControlPanel(
             )
 
             // 2. CALIDAD.
-            Text(text = stringResource(R.string.quality, (state.quality * 100).toInt()), style = MaterialTheme.typography.labelMedium)
+            Text(text = stringResource(R.string.quality, (sliderPosition * 100).toInt()), style = MaterialTheme.typography.labelMedium)
             Slider(
                 value = sliderPosition,
                 onValueChange = { sliderPosition = it },
@@ -63,19 +66,24 @@ fun ImageControlPanel(
             )
 
             // 3. OPCIONES TÁCTICAS.
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Checkbox(checked = state.isGrayScale, onCheckedChange = { onAction(ImageAction.ToggleGrayScale) })
-                Text(text = stringResource(R.string.gray_scale), style = MaterialTheme.typography.labelMedium)
-            }
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Checkbox(checked = state.shouldSanitize, onCheckedChange = { onAction(ImageAction.ToggleSanitize) })
-                Text(text = stringResource(R.string.sanitize), style = MaterialTheme.typography.labelMedium)
+            Column {
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(checked = state.isGrayScale, onCheckedChange = { onAction(ImageAction.ToggleGrayScale) })
+                    Text(text = stringResource(R.string.gray_scale), style = MaterialTheme.typography.labelMedium)
+                }
+                if(!isPortrait){
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Checkbox(checked = state.isForcedSlider, onCheckedChange = { onAction(ImageAction.ToogleSliceMode) })
+                        Text(text = stringResource(R.string.slice_mode), style = MaterialTheme.typography.labelMedium)
+                    }
+                }
             }
 
             // 4. ACCIONES FINALES
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(Dimensions.PaddingSmall)
+                horizontalArrangement = Arrangement.spacedBy(Dimensions.PaddingSmall),
             ) {
                 MainButton(
                     title = stringResource(R.string.save),
@@ -88,6 +96,7 @@ fun ImageControlPanel(
                     modifier.weight(0.3f)
                 )
             }
+            Spacer(Modifier.padding(top = Dimensions.PaddingSmall))
         }
     }
 }

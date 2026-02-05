@@ -7,10 +7,11 @@ import androidx.compose.ui.graphics.Color
 val NatoGreen = Color(0xFF384333)
 val NatoGreenLight = Color(0xFF5E6D58)
 val NatoGreenDark = Color(0xFF1B2418)
+val TacticalGreen = Color(0xFF00E676)
 
 // Acentos de Acción (Visibilidad media para no delatar posición)
 val TacticalAmber = Color(0xFFFFB300)
-val TacticalAmberDark = Color(0xFFEF3E03)
+val TacticalAmberDark = Color(0xFFE65100)
 
 // Fondos y Superficies (Optimizado para OLED)
 val DeepBlack = Color(0xFF000000)      // Fondo principal

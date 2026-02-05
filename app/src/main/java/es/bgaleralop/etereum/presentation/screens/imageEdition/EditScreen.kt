@@ -37,15 +37,28 @@ fun EditScreen(
     } else {
         Log.d(TAG, "Orientación: Landscape")
         // OPCION 2: MOVIL LANDSCAPE (Horizontal) O TABLET
-        Row(modifier = modifier.fillMaxSize()) {
-            Box(modifier = Modifier.weight(1.2f)) {
-                ComparisonSideBySideLayout(original = state.originalBitmap?.image, modified = state.modifiedBitmap?.image)
+        Column(modifier = modifier.fillMaxSize()) {
+            /*Row(verticalAlignment = Alignment.CenterVertically) {
+                Checkbox(checked = state.isForcedSlider, onCheckedChange = {onAction(ImageAction.ToogleSliceMode)} )
+                Text(
+                    text = stringResource(R.string.slice_mode),
+                    style = MaterialTheme.typography.labelMedium)
+            }*/
+            Row(modifier = Modifier.fillMaxSize().weight(1.2f)) {
+                Box(modifier = Modifier.weight(1.2f)) {
+                    if (state.isForcedSlider){
+                        ComparisonSliderLayout(original = state.originalBitmap?.image, modified = state.modifiedBitmap?.image)
+                    } else {
+                        ComparisonSideBySideLayout(original = state.originalBitmap?.image, modified = state.modifiedBitmap?.image)
+                    }
+                }
+                ImageControlPanel(
+                    state = state,
+                    onAction = onAction,
+                    isPortrait = false,
+                    modifier = Modifier.weight(0.7f)
+                )
             }
-            ImageControlPanel(
-                state = state,
-                onAction = onAction,
-                modifier = Modifier.weight(0.7f)
-            )
         }
     }
 }
