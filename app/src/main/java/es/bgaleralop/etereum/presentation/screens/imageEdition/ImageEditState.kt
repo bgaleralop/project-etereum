@@ -23,4 +23,11 @@ data class ImageEditState(
 
     // Formato de visualizacion
     var isForcedSlider: Boolean = false
-)
+) {
+    val savingPercentage: Int
+        get() = if(modifiedBitmap != null && originalBitmap != null) {
+            if(originalBitmap.weightInBytes > 0) {
+                (100 - (modifiedBitmap!!.weightInBytes * 100)).toInt().coerceAtLeast(0)
+            } else 0
+        } else 0
+}

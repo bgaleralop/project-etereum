@@ -10,8 +10,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import es.bgaleralop.etereum.R
 import es.bgaleralop.etereum.domain.common.Status
+import es.bgaleralop.etereum.domain.common.getFileNameFromUri
 import es.bgaleralop.etereum.domain.images.model.ImageProcessResult
 import es.bgaleralop.etereum.domain.images.services.toRawByteArray
 import es.bgaleralop.etereum.domain.images.usecases.OpenImageUseCase
@@ -42,8 +42,7 @@ class EditorViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
-        Log.d(TAG, "Iniciado...")
-        loadResourceImage(R.drawable.pict1571)
+
     }
 
     fun onAction(action: ImageAction) {
@@ -62,13 +61,13 @@ class EditorViewModel @Inject constructor(
             is ImageAction.LoadImage -> {
                 Log.i(TAG, "Cargando imagen desde ${action.image}")
                 viewModelScope.launch {
-                    val image = openImageUseCase(action.image)
+                    val image = openImageUseCase(context, action.image)
                     image.onSuccess {
                         state = state.copy(
                             originalBitmap = it,
                             modifiedBitmap = it,
                             imageStatus = Status.IDLE,
-                            outputName = "ETEREUM-copy-${System.currentTimeMillis()}",
+                            outputName = "ETEREUM-${getFileNameFromUri(context, action.image)}",
                         )
                     }.onFailure {
                         Log.e(TAG, "Error al cargar imagen: ${it.message}")
@@ -199,7 +198,7 @@ class EditorViewModel @Inject constructor(
             // Decodificar realmente con el tamaño reducido.
             options.inJustDecodeBounds = false
             val finalBitmap = BitmapFactory.decodeResource(context.resources, resId, options)
-            val image = ImageProcessResult(finalBitmap, finalBitmap.toRawByteArray().size, false)
+            val image = ImageProcessResult(finalBitmap, finalBitmap.toRawByteArray().size.toLong(), false)
             state = state.copy(
                 originalBitmap = image,
                 modifiedBitmap = image,
