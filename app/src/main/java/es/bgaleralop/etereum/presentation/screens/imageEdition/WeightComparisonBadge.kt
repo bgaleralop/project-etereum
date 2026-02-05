@@ -26,6 +26,7 @@ import es.bgaleralop.etereum.presentation.theme.TacticalAmber
 @Composable
 fun WeightComparisonBadge(
     state: ImageEditState,
+    savingPercentaje: Int,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -51,7 +52,7 @@ fun WeightComparisonBadge(
         )
 
         Column(horizontalAlignment = Alignment.End) {
-            Text("OPTIMIZADO (-${state.savingPercentage}%)", style = MaterialTheme.typography.labelSmall, color = TacticalAmber.copy(alpha = 0.5f))
+            Text("OPTIMIZADO (-$savingPercentaje%)", style = MaterialTheme.typography.labelSmall, color = TacticalAmber.copy(alpha = 0.5f))
             Text(formatSize(state.modifiedBitmap?.weightInBytes ?: 0), style = MaterialTheme.typography.bodyMedium, color = TacticalAmber)
         }
     }
@@ -64,7 +65,8 @@ fun WeightComparisonBadge(
 fun ComparisonBadgePreview() {
     EtereumTheme {
         WeightComparisonBadge(
-            state = ImageEditState()
+            state = ImageEditState(),
+            savingPercentaje = 67
         )
     }
 }

@@ -20,14 +20,10 @@ data class ImageEditState(
 
     // Estado de la transformación.
     var imageStatus: Status = Status.IDLE,
+    var savingPercentage: Int = 0,
 
     // Formato de visualizacion
     var isForcedSlider: Boolean = false
 ) {
-    val savingPercentage: Int
-        get() = if(modifiedBitmap != null && originalBitmap != null) {
-            if(originalBitmap.weightInBytes > 0) {
-                (100 - (modifiedBitmap!!.weightInBytes * 100)).toInt().coerceAtLeast(0)
-            } else 0
-        } else 0
+
 }

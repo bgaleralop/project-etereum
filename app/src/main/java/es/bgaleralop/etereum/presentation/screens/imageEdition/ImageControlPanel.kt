@@ -1,5 +1,8 @@
 package es.bgaleralop.etereum.presentation.screens.imageEdition
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,6 +39,12 @@ fun ImageControlPanel(
     modifier: Modifier = Modifier,
     isPortrait: Boolean = true
 ) {
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let { onAction(ImageAction.LoadImage(it)) }
+    }
+
     Card(
         colors = CardDefaults.cardColors(containerColor = SurfaceGrey),
         modifier = modifier.padding(Dimensions.ScreenPadding)
@@ -87,12 +96,12 @@ fun ImageControlPanel(
             ) {
                 MainButton(
                     title = stringResource(R.string.save),
-                    onClick = { onAction(ImageAction.Save) },
+                    onClick = { onAction(ImageAction.SaveAndOpen) },
                     modifier.weight(0.5f)
                 )
                 SecondaryButton(
                     title = stringResource(R.string.open),
-                    onClick = { onAction(ImageAction.SaveAndOpen) },
+                    onClick = { launcher.launch("image/*") },
                     modifier.weight(0.3f)
                 )
             }
