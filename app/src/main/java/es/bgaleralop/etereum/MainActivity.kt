@@ -25,6 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import es.bgaleralop.etereum.presentation.common.UiEvent
 import es.bgaleralop.etereum.presentation.common.components.EtereumTopBar
 import es.bgaleralop.etereum.presentation.navigation.Screen
+import es.bgaleralop.etereum.presentation.screens.config.SettingsScreen
 import es.bgaleralop.etereum.presentation.screens.dashboard.LobbyScreen
 import es.bgaleralop.etereum.presentation.screens.imageEdition.EditScreen
 import es.bgaleralop.etereum.presentation.screens.imageEdition.EditorViewModel
@@ -62,7 +63,12 @@ class MainActivity : ComponentActivity() {
                             //Solo mostramos la fecha si no estamos en el lobby
                             canNavigateBack = currentRoute != Screen.Lobby::class.qualifiedName,
                             onBackClick = { navController.popBackStack() },
-                            onSettingsClick = { }
+                            onSettingsClick = {
+                                if(currentRoute != Screen.Settings::class.qualifiedName){
+                                    navController.navigate(Screen.Settings)
+                                }
+                            }
+
                         )
                     }
                 ) { innerPadding ->
@@ -85,6 +91,9 @@ class MainActivity : ComponentActivity() {
                                 onAction = editorViewModel::onAction,
                                 modifier = Modifier.fillMaxSize()
                             )
+                        }
+                        composable<Screen.Settings>{
+                            SettingsScreen()
                         }
                     }
                 }

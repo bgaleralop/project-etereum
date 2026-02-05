@@ -7,4 +7,5 @@ sealed class Screen {
     @Serializable data object Lobby : Screen()
     @Serializable data object ImageOps : Screen()
     @Serializable data object DocOps : Screen()
+    @Serializable data object Settings : Screen()
 }
