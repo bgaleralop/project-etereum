@@ -7,6 +7,6 @@ import android.graphics.Bitmap
  */
 data class ImageProcessResult(
     val image: Bitmap,
-    val weightInKb: Int,
+    val weightInBytes: Long,
     val isSanitized: Boolean = false
 )
