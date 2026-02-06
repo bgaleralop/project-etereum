@@ -9,7 +9,7 @@
 ### Fase 1: Inteligencia de Imagen
 - **Reducción Táctica:** Recorte, cambio de resolución y formato (WebP/JPG) para minimizar el impacto en el ancho de banda.
 - **Sanitización Forense:** Eliminación de metadatos EXIF/GPS para evitar el rastreo del emisor.
-- **Comparador de Calidad:** Visualización side-by-side (Original vs. Procesada) con indicador de peso en tiempo real.
+- **Comparador de Calidad:** Visualización side-by-side (Original vs. Procesada) y Slice (Modificada superpuesta sobre Original) con indicador de peso en tiempo real.
 - **Gestión de Misión:** Almacenamiento organizado en carpetas seguras dentro del sandbox de la app.
 
 ### Fase 2: Transmutación de Documentos
@@ -23,9 +23,10 @@
 - **Concurrencia:** Kotlin Coroutines & Flow.
 
 ## 📂 Estructura del Proyecto (Clean Architecture)
-- `/app`: Capa de UI (Compose), ViewModels y DI (Dependency Injection).
+- `/presentation`: Capa de UI (Compose), ViewModels y UiState.
 - `/domain`: Capa de negocio pura (Interfaces de servicios, Modelos de datos y Use Cases).
 - `/data`: Implementación de interfaces (Repisitorios, Procesamiento de archivos, SharedPreferences).
+- `/di`: DI (Dependency Injection).
 
 ## 🛡️ Principios de Desarrollo
 Aunque el proyecto es actualmente exclusivo para Android, se desarrolla bajo el principio de **Inversión de Dependencias**. Toda la lógica de procesamiento está abstraída tras interfaces en la capa de `domain`, facilitando migraciones futuras a otros sistemas o integraciones con librerías nativas (C++/Rust).
