@@ -72,12 +72,11 @@ fun EditScreen(
 
         Log.i(TAG, "Comprobando Orientación...")
         if(isPortrait) {
-            Log.d(TAG, "Orientación: Portrait")
             // OPCION 1: MOVIL PORTRAIT (Vertical)
             Column(modifier = modifier.fillMaxSize()) {
                 WeightComparisonBadge(state = state, savingPercentaje = state.savingPercentage)
                 Box(modifier = Modifier.weight(1.2f)) {
-                    ComparisonSliderLayout(original = state.originalBitmap?.image, modified = state.modifiedBitmap?.image)
+                    ComparisonSliderLayout(original = state.originalBitmap.image, modified = state.modifiedBitmap?.image)
                 }
                 ImageControlPanel(
                     state = state,
@@ -85,17 +84,16 @@ fun EditScreen(
                 )
             }
         } else {
-            Log.d(TAG, "Orientación: Landscape")
             // OPCION 2: MOVIL LANDSCAPE (Horizontal) O TABLET
             Column(modifier = modifier.fillMaxSize()) {
                 Row(modifier = Modifier.fillMaxSize().weight(1.2f)) {
                     Box(modifier = Modifier.weight(1.2f)) {
                         if (state.isForcedSlider){
                             WeightComparisonBadge(state = state, savingPercentaje = state.savingPercentage, modifier = Modifier.zIndex(2f))
-                            ComparisonSliderLayout(original = state.originalBitmap?.image, modified = state.modifiedBitmap?.image)
+                            ComparisonSliderLayout(original = state.originalBitmap.image, modified = state.modifiedBitmap?.image)
                         } else {
                             WeightComparisonBadge(state = state, savingPercentaje = state.savingPercentage, modifier = Modifier.zIndex(2f))
-                            ComparisonSideBySideLayout(original = state.originalBitmap?.image, modified = state.modifiedBitmap?.image)
+                            ComparisonSideBySideLayout(original = state.originalBitmap.image, modified = state.modifiedBitmap?.image)
                         }
                     }
 

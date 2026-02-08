@@ -10,8 +10,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import es.bgaleralop.etereum.data.repository.SettingsRepository
 import es.bgaleralop.etereum.domain.common.Status
 import es.bgaleralop.etereum.domain.common.getFileNameFromUri
+import es.bgaleralop.etereum.domain.config.UserSettings
 import es.bgaleralop.etereum.domain.images.model.ImageProcessResult
 import es.bgaleralop.etereum.domain.images.services.toRawByteArray
 import es.bgaleralop.etereum.domain.images.usecases.OpenImageUseCase
@@ -21,7 +23,9 @@ import es.bgaleralop.etereum.domain.images.usecases.TransformImageUseCase
 import es.bgaleralop.etereum.presentation.common.UiEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,6 +35,7 @@ class EditorViewModel @Inject constructor(
     private val saveImageUseCase: SaveImageUseCase,
     private val transformer: TransformImageUseCase,
     private val openImageUseCase: OpenImageUseCase,
+    private val settingsRepository: SettingsRepository
 ): ViewModel() {
     private val TAG = "ETEREUM EditorViewModel: "
 
@@ -41,8 +46,21 @@ class EditorViewModel @Inject constructor(
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
-    init {
+    val userSettings = settingsRepository.settingsFlow.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Eagerly,
+        initialValue = UserSettings(false, "", false)
+    )
 
+    init {
+        viewModelScope.launch {
+            userSettings.collect { settings ->
+                state = state.copy(
+                    isForcedSlider = settings.preferSliderMode,
+                    targetDirectory = settings.lastMissionFolder
+                )
+            }
+        }
     }
 
     fun onAction(action: ImageAction) {
@@ -57,6 +75,9 @@ class EditorViewModel @Inject constructor(
             is ImageAction.CreateFolder -> {
                 Log.i(TAG, "Creando nuevo directorio de misiones...")
                 state = state.copy( targetDirectory = action.folderName )
+                viewModelScope.launch {
+                    settingsRepository.updateLastMissionFolder(action.folderName)
+                }
             }
             is ImageAction.LoadImage -> {
                 Log.i(TAG, "Cargando imagen desde ${action.image}")
@@ -161,7 +182,7 @@ class EditorViewModel @Inject constructor(
             // 2. Preparación de parámetros de la imagen
             val params = SaveParams(
                 fileName = state.outputName,
-                folder = state.targetDirectory,
+                folder = userSettings.value.lastMissionFolder,
                 format = state.targetFormat,
                 sanitized = state.shouldSanitize,
                 quality = (state.quality * 100).toInt()
