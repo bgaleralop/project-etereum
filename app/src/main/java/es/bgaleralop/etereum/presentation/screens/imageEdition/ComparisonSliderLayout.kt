@@ -4,14 +4,21 @@ import android.graphics.Bitmap
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronLeft
+import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -52,6 +59,8 @@ fun ComparisonSliderLayout(
     var sliderPosition by rememberSaveable { mutableFloatStateOf(0.5f) }
     val originalBitmap: ImageBitmap? = remember(original) { original?.asImageBitmap() }
     val modifiedBitmap: ImageBitmap? = remember(modified) { modified?.asImageBitmap() }
+    var isSliderActive by rememberSaveable { mutableStateOf(true) }
+
     Log.i(TAG, "Iniciado...")
 
     Box(modifier = Modifier
@@ -99,14 +108,40 @@ fun ComparisonSliderLayout(
         }
 
         // CONTROL DESLIZANTE FISICO.
-        Slider(
-            value = sliderPosition,
-            onValueChange = { sliderPosition = it },
-            colors = SliderDefaults.colors(thumbColor = TacticalAmber, activeTrackColor = TacticalAmber),
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = Dimensions.PaddingMedium)
-        )
+        if(isSliderActive){
+            Row(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(top = Dimensions.PaddingMedium)
+            ){
+                IconButton(
+                    onClick = { isSliderActive = !isSliderActive}
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ChevronLeft,
+                        contentDescription = null,
+                        tint = TacticalAmber.copy(alpha = 0.7f)
+                    )
+                }
+                Slider(
+                    value = sliderPosition,
+                    onValueChange = { sliderPosition = it },
+                    colors = SliderDefaults.colors(thumbColor = TacticalAmber, activeTrackColor = TacticalAmber),
+                )
+            }
+        } else {
+            IconButton(
+                onClick = { isSliderActive = !isSliderActive},
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ChevronRight,
+                    contentDescription = null,
+                    tint = TacticalAmber.copy(alpha = 0.7f)
+                )
+            }
+        }
     }
 }
 

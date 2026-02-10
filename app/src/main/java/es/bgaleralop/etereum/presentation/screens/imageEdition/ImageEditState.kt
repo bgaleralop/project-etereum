@@ -9,7 +9,7 @@ data class ImageEditState(
     var modifiedBitmap: ImageProcessResult? = null,
 
     // Parámetros del Panel de Control
-    var quality: Float = 0.8f,
+    var quality: Float = 1f,
     var targetFormat: ImageFormat = ImageFormat.WEBP,
     var isGrayScale: Boolean = false,
     var shouldSanitize: Boolean = true,
