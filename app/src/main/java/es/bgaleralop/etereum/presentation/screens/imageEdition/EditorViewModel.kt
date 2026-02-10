@@ -1,7 +1,6 @@
 package es.bgaleralop.etereum.presentation.screens.imageEdition
 
 import android.content.Context
-import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -14,8 +13,6 @@ import es.bgaleralop.etereum.data.repository.SettingsRepository
 import es.bgaleralop.etereum.domain.common.Status
 import es.bgaleralop.etereum.domain.common.getFileNameFromUri
 import es.bgaleralop.etereum.domain.config.UserSettings
-import es.bgaleralop.etereum.domain.images.model.ImageProcessResult
-import es.bgaleralop.etereum.domain.images.services.toRawByteArray
 import es.bgaleralop.etereum.domain.images.usecases.OpenImageUseCase
 import es.bgaleralop.etereum.domain.images.usecases.SaveImageUseCase
 import es.bgaleralop.etereum.domain.images.usecases.SaveParams
@@ -160,7 +157,12 @@ class EditorViewModel @Inject constructor(
                 )
 
                 result.onSuccess {
-                    state = state.copy(modifiedBitmap = it)
+                    val weight = if(state.originalBitmap!!.weightInBytes <= it.weightInBytes) {
+                        state.originalBitmap!!.weightInBytes
+                    } else {
+                        it.weightInBytes
+                    }
+                    state = state.copy(modifiedBitmap = it.copy(weightInBytes = weight))
                     calculateSavingPercentage()
                 }.onFailure {
                     Log.e(TAG, "Error al procesar imagen: ${it.message}")
@@ -214,27 +216,5 @@ class EditorViewModel @Inject constructor(
         val savingPercentage = ((originalSize - currentSize) * 100 / originalSize).toInt()
 
         state = state.copy(savingPercentage = if(savingPercentage > 0 ) savingPercentage else 0)
-    }
-
-    private fun loadResourceImage(resId: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val options = BitmapFactory.Options().apply {
-                inJustDecodeBounds = true
-            }
-            BitmapFactory.decodeResource(context.resources, resId, options)
-
-            // Calcular el factor de reudccion
-            options.inSampleSize = 8
-
-            // Decodificar realmente con el tamaño reducido.
-            options.inJustDecodeBounds = false
-            val finalBitmap = BitmapFactory.decodeResource(context.resources, resId, options)
-            val image = ImageProcessResult(finalBitmap, finalBitmap.toRawByteArray().size.toLong(), false)
-            state = state.copy(
-                originalBitmap = image,
-                modifiedBitmap = image,
-                outputName = "IMG_DEMO"
-            )
-        }
     }
 }
