@@ -69,6 +69,13 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     kapt(libs.hilt.android.compiler)
 
+    // Documentos. Para Office
+    implementation(libs.poi.ooxml)
+    // Documentos. Para PDF
+    implementation(libs.pdfbox.android)
+    // Documentos. Para Markdown/HTML
+    implementation(libs.commonmark)
+
     implementation(libs.androidx.datastore.preferences)
 
     testImplementation(libs.junit)
