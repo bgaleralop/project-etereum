@@ -29,6 +29,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.core.graphics.createBitmap
+import es.bgaleralop.etereum.domain.images.model.ImageProcessResult
 import es.bgaleralop.etereum.presentation.theme.EtereumTheme
 import es.bgaleralop.etereum.presentation.theme.TacticalAmber
 
@@ -114,9 +116,17 @@ fun EditScreen(
 @Preview(showBackground = true, showSystemUi = true, name = "Portrait")
 @Composable
 fun EditScreenPreview() {
+    val image = ImageProcessResult(
+        image = createBitmap(2000, 4000),
+        weightInBytes = 4000,
+        isSanitized = false,
+    )
     EtereumTheme {
         Scaffold { innerPadding ->
-            EditScreen(ImageEditState(), onAction = {}, modifier = Modifier.fillMaxSize().padding(innerPadding))
+            EditScreen(ImageEditState(
+                originalBitmap = image,
+                modifiedBitmap = image
+            ), onAction = {}, modifier = Modifier.fillMaxSize().padding(innerPadding))
         }
     }
 }

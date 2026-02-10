@@ -96,6 +96,7 @@ class EditorViewModel @Inject constructor(
                     }
 
                     Log.d(TAG, "Imagen cargada: ${state.originalBitmap}")
+                    processInRealTime()
                 }
 
             }
