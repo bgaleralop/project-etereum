@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.zIndex
 import es.bgaleralop.etereum.R
 import es.bgaleralop.etereum.domain.common.Status
+import es.bgaleralop.etereum.domain.images.utils.determineIsEnabledByStatus
 import es.bgaleralop.etereum.presentation.theme.Dimensions
 import es.bgaleralop.etereum.presentation.theme.EtereumTheme
 import es.bgaleralop.etereum.presentation.theme.TacticalAmber

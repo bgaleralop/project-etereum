@@ -32,6 +32,7 @@ import androidx.compose.ui.zIndex
 import androidx.core.graphics.createBitmap
 import es.bgaleralop.etereum.domain.common.Status
 import es.bgaleralop.etereum.domain.images.model.ImageProcessResult
+import es.bgaleralop.etereum.domain.images.utils.determineIsEnabledByStatus
 import es.bgaleralop.etereum.presentation.theme.EtereumTheme
 import es.bgaleralop.etereum.presentation.theme.TacticalAmber
 

@@ -22,6 +22,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.zIndex
 import es.bgaleralop.etereum.domain.common.Status
+import es.bgaleralop.etereum.domain.images.utils.determineIsEnabledByStatus
 import es.bgaleralop.etereum.presentation.theme.Dimensions
 import es.bgaleralop.etereum.presentation.theme.ErrorRed
 import es.bgaleralop.etereum.presentation.theme.EtereumTheme

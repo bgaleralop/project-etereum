@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import es.bgaleralop.etereum.R
 import es.bgaleralop.etereum.domain.common.Status
+import es.bgaleralop.etereum.domain.images.utils.determineIsEnabledByStatus
 import es.bgaleralop.etereum.presentation.common.components.MainButton
 import es.bgaleralop.etereum.presentation.common.components.SecondaryButton
 import es.bgaleralop.etereum.presentation.theme.Dimensions
@@ -123,12 +124,7 @@ fun ImageControlPanel(
     }
 }
 
-fun determineIsEnabledByStatus(status: Status): Boolean = when (status) {
-    Status.IDLE -> true
-    Status.PROCESSING -> false
-    Status.COMPLETED -> true
-    Status.ERROR -> true
-}
+
 
 
 
@@ -145,8 +141,8 @@ fun ImageControlPanelPreview(){
                 onAction = {},
                 isEnabled = determineIsEnabledByStatus(Status.COMPLETED),
                 modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding))
+                    .fillMaxSize()
+                    .padding(innerPadding))
         }
     }
 }
