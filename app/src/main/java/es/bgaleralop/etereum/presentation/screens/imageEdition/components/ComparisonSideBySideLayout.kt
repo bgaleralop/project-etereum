@@ -1,4 +1,4 @@
-package es.bgaleralop.etereum.presentation.screens.imageEdition
+package es.bgaleralop.etereum.presentation.screens.imageEdition.components
 
 import android.graphics.Bitmap
 import android.util.Log
@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.zIndex
 import es.bgaleralop.etereum.domain.common.Status
 import es.bgaleralop.etereum.domain.images.utils.determineIsEnabledByStatus
+import es.bgaleralop.etereum.presentation.common.components.ProcessingOverlay
 import es.bgaleralop.etereum.presentation.theme.Dimensions
 import es.bgaleralop.etereum.presentation.theme.ErrorRed
 import es.bgaleralop.etereum.presentation.theme.EtereumTheme

@@ -1,4 +1,4 @@
-package es.bgaleralop.etereum.presentation.screens.imageEdition
+package es.bgaleralop.etereum.presentation.screens.imageEdition.components
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -35,6 +35,8 @@ import es.bgaleralop.etereum.domain.common.Status
 import es.bgaleralop.etereum.domain.images.utils.determineIsEnabledByStatus
 import es.bgaleralop.etereum.presentation.common.components.MainButton
 import es.bgaleralop.etereum.presentation.common.components.SecondaryButton
+import es.bgaleralop.etereum.presentation.screens.imageEdition.ImageAction
+import es.bgaleralop.etereum.presentation.screens.imageEdition.ImageEditState
 import es.bgaleralop.etereum.presentation.theme.Dimensions
 import es.bgaleralop.etereum.presentation.theme.EtereumTheme
 import es.bgaleralop.etereum.presentation.theme.SurfaceGrey
@@ -95,7 +97,8 @@ fun ImageControlPanel(
                 }
                 if(!isPortrait){
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(checked = state.isForcedSlider, onCheckedChange = { onAction(ImageAction.ToogleSliceMode) }, enabled = isEnabled)
+                        Checkbox(checked = state.isForcedSlider, onCheckedChange = { onAction(
+                            ImageAction.ToogleSliceMode) }, enabled = isEnabled)
                         Text(text = stringResource(R.string.slice_mode), style = MaterialTheme.typography.labelMedium)
                     }
                 }

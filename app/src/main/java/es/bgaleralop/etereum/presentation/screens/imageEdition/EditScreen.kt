@@ -33,6 +33,10 @@ import androidx.core.graphics.createBitmap
 import es.bgaleralop.etereum.domain.common.Status
 import es.bgaleralop.etereum.domain.images.model.ImageProcessResult
 import es.bgaleralop.etereum.domain.images.utils.determineIsEnabledByStatus
+import es.bgaleralop.etereum.presentation.screens.imageEdition.components.ComparisonSideBySideLayout
+import es.bgaleralop.etereum.presentation.screens.imageEdition.components.ComparisonSliderLayout
+import es.bgaleralop.etereum.presentation.screens.imageEdition.components.ImageControlPanel
+import es.bgaleralop.etereum.presentation.screens.imageEdition.components.WeightComparisonBadge
 import es.bgaleralop.etereum.presentation.theme.EtereumTheme
 import es.bgaleralop.etereum.presentation.theme.TacticalAmber
 
@@ -98,14 +102,22 @@ fun EditScreen(
                 Row(modifier = Modifier.fillMaxSize().weight(1.2f)) {
                     Box(modifier = Modifier.weight(1.2f)) {
                         if (state.isForcedSlider){
-                            WeightComparisonBadge(state = state, savingPercentaje = state.savingPercentage, modifier = Modifier.zIndex(2f))
+                            WeightComparisonBadge(
+                                state = state,
+                                savingPercentaje = state.savingPercentage,
+                                modifier = Modifier.zIndex(2f)
+                            )
                             ComparisonSliderLayout(
                                 original = state.originalBitmap.image,
                                 modified = state.modifiedBitmap?.image,
                                 imageStatus = state.imageStatus
                             )
                         } else {
-                            WeightComparisonBadge(state = state, savingPercentaje = state.savingPercentage, modifier = Modifier.zIndex(2f))
+                            WeightComparisonBadge(
+                                state = state,
+                                savingPercentaje = state.savingPercentage,
+                                modifier = Modifier.zIndex(2f)
+                            )
                             ComparisonSideBySideLayout(
                                 original = state.originalBitmap.image,
                                 modified = state.modifiedBitmap?.image,
