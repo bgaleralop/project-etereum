@@ -20,6 +20,8 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.zIndex
+import es.bgaleralop.etereum.domain.common.Status
 import es.bgaleralop.etereum.presentation.theme.Dimensions
 import es.bgaleralop.etereum.presentation.theme.ErrorRed
 import es.bgaleralop.etereum.presentation.theme.EtereumTheme
@@ -28,7 +30,8 @@ import es.bgaleralop.etereum.presentation.theme.EtereumTheme
 fun ComparisonSideBySideLayout(
     original: Bitmap?,
     modified: Bitmap?,
-    modifier: Modifier = Modifier
+    imageStatus: Status,
+    modifier: Modifier = Modifier,
 ) {
     val TAG = "ETEREUM ComparisonSideBySideLayout :"
 
@@ -66,6 +69,12 @@ fun ComparisonSideBySideLayout(
                     contentScale = ContentScale.Fit,
                     modifier = Modifier.fillMaxSize().weight(0.5f)
                 )
+                if (!determineIsEnabledByStatus(imageStatus)){
+                    ProcessingOverlay(
+                        message = "Procesando...",
+                        modifier = Modifier.zIndex(100f)
+                    )
+                }
             } else {
                 Log.w(TAG, "No hay imagen modificada cargada")
                 Text("No hay imagen cargada", style = MaterialTheme.typography.labelLarge.copy(color = ErrorRed))
@@ -82,6 +91,7 @@ fun ComparisonSideBySideLayoutPreview(){
             ComparisonSideBySideLayout(
                 original = null,
                 modified = null,
+                imageStatus = Status.IDLE,
                 modifier = Modifier.padding(innerPadding)
             )
         }

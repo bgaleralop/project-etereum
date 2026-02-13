@@ -122,7 +122,6 @@ class EditorViewModel @Inject constructor(
                 Log.i(TAG, "Cambiando escala de grises...")
                 state = state.copy(
                     isGrayScale = !state.isGrayScale,
-                    imageStatus = Status.COMPLETED
                 )
                 processInRealTime()
             }
@@ -134,7 +133,6 @@ class EditorViewModel @Inject constructor(
                 }
                 state = state.copy(
                     shouldSanitize = !state.shouldSanitize,
-                    imageStatus = Status.PROCESSING
                 )
                 processInRealTime()
             }
@@ -155,6 +153,8 @@ class EditorViewModel @Inject constructor(
 
     private fun processInRealTime() {
         if (state.originalBitmap != null) {
+            Log.d(TAG, "Procesando imagen.")
+            state = state.copy(imageStatus = Status.PROCESSING)
             Log.d(TAG, "original bitmap: ${state.originalBitmap}")
             viewModelScope.launch(Dispatchers.Default) {
                 //Aquí se genera el modifiedBitmap
@@ -170,7 +170,10 @@ class EditorViewModel @Inject constructor(
                     } else {
                         it.weightInBytes
                     }
-                    state = state.copy(modifiedBitmap = it.copy(weightInBytes = weight))
+                    state = state.copy(
+                        modifiedBitmap = it.copy(weightInBytes = weight),
+                        imageStatus = Status.COMPLETED)
+                    Log.d(TAG, "Imagen procesada correctamente")
                     calculateSavingPercentage()
                 }.onFailure {
                     Log.e(TAG, "Error al procesar imagen: ${it.message}")

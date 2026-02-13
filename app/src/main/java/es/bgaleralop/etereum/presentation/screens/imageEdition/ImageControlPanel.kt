@@ -23,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -43,6 +42,7 @@ import es.bgaleralop.etereum.presentation.theme.SurfaceGrey
 fun ImageControlPanel(
     state: ImageEditState,
     onAction: (ImageAction) -> Unit,
+    isEnabled: Boolean,
     modifier: Modifier = Modifier,
     isPortrait: Boolean = true
 ) {
@@ -51,8 +51,6 @@ fun ImageControlPanel(
     ) { uri: Uri? ->
         uri?.let { onAction(ImageAction.LoadImage(it)) }
     }
-
-    val isEnabled by rememberSaveable { mutableStateOf(determineIsEnabled(state.imageStatus)) }
 
     Card(
         colors = CardDefaults.cardColors(containerColor = SurfaceGrey),
@@ -125,7 +123,7 @@ fun ImageControlPanel(
     }
 }
 
-private fun determineIsEnabled(status: Status): Boolean = when (status) {
+fun determineIsEnabledByStatus(status: Status): Boolean = when (status) {
     Status.IDLE -> true
     Status.PROCESSING -> false
     Status.COMPLETED -> true
@@ -145,6 +143,7 @@ fun ImageControlPanelPreview(){
             ImageControlPanel(
                 state = ImageEditState(imageStatus = Status.COMPLETED),
                 onAction = {},
+                isEnabled = determineIsEnabledByStatus(Status.COMPLETED),
                 modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding))
