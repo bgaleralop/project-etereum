@@ -36,7 +36,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.zIndex
 import es.bgaleralop.etereum.R
+import es.bgaleralop.etereum.domain.common.Status
 import es.bgaleralop.etereum.presentation.theme.Dimensions
 import es.bgaleralop.etereum.presentation.theme.EtereumTheme
 import es.bgaleralop.etereum.presentation.theme.TacticalAmber
@@ -52,6 +54,7 @@ import es.bgaleralop.etereum.presentation.theme.TacticalAmber
 fun ComparisonSliderLayout(
     original: Bitmap?,
     modified: Bitmap?,
+    imageStatus: Status,
     modifier: Modifier = Modifier
 ) {
     val TAG = "ETEREUM ComparisonSliderLayout :"
@@ -142,6 +145,13 @@ fun ComparisonSliderLayout(
                 )
             }
         }
+
+        if (!determineIsEnabledByStatus(imageStatus)) {
+            ProcessingOverlay(
+                message = "Procesando...",
+                modifier = Modifier.zIndex(100f)
+            )
+        }
     }
 }
 
@@ -154,6 +164,7 @@ fun ComparisonSliderLayoutPreview(){
             ComparisonSliderLayout(
                 original = null,
                 modified = null,
+                imageStatus = Status.IDLE,
                 modifier = Modifier.padding(innerPadding)
             )
         }

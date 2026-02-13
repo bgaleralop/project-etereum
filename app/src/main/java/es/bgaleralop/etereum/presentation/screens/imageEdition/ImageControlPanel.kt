@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -16,6 +17,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,17 +27,22 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import es.bgaleralop.etereum.R
+import es.bgaleralop.etereum.domain.common.Status
 import es.bgaleralop.etereum.presentation.common.components.MainButton
 import es.bgaleralop.etereum.presentation.common.components.SecondaryButton
 import es.bgaleralop.etereum.presentation.theme.Dimensions
+import es.bgaleralop.etereum.presentation.theme.EtereumTheme
 import es.bgaleralop.etereum.presentation.theme.SurfaceGrey
 
 @Composable
 fun ImageControlPanel(
     state: ImageEditState,
     onAction: (ImageAction) -> Unit,
+    isEnabled: Boolean,
     modifier: Modifier = Modifier,
     isPortrait: Boolean = true
 ) {
@@ -47,7 +54,9 @@ fun ImageControlPanel(
 
     Card(
         colors = CardDefaults.cardColors(containerColor = SurfaceGrey),
-        modifier = modifier.padding(Dimensions.ScreenPadding)
+        modifier = modifier
+            .padding(Dimensions.ScreenPadding)
+            .alpha(if (isEnabled) 1f else 0.5f)
     ) {
         var sliderPosition by rememberSaveable { mutableFloatStateOf(state.quality) }
 
@@ -63,6 +72,7 @@ fun ImageControlPanel(
                 value = state.outputName,
                 onValueChange = { onAction(ImageAction.UpdateName(it)) },
                 label = { Text(text = stringResource(R.string.file_name)) },
+                enabled = isEnabled,
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -71,19 +81,20 @@ fun ImageControlPanel(
             Slider(
                 value = sliderPosition,
                 onValueChange = { sliderPosition = it },
-                onValueChangeFinished = { onAction(ImageAction.UpdateQuality(sliderPosition)) }
+                onValueChangeFinished = { onAction(ImageAction.UpdateQuality(sliderPosition)) },
+                enabled = isEnabled
             )
 
             // 3. OPCIONES TÁCTICAS.
             Column {
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Checkbox(checked = state.isGrayScale, onCheckedChange = { onAction(ImageAction.ToggleGrayScale) })
+                    Checkbox(checked = state.isGrayScale, onCheckedChange = { onAction(ImageAction.ToggleGrayScale) }, enabled = isEnabled)
                     Text(text = stringResource(R.string.gray_scale), style = MaterialTheme.typography.labelMedium)
                 }
                 if(!isPortrait){
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(checked = state.isForcedSlider, onCheckedChange = { onAction(ImageAction.ToogleSliceMode) })
+                        Checkbox(checked = state.isForcedSlider, onCheckedChange = { onAction(ImageAction.ToogleSliceMode) }, enabled = isEnabled)
                         Text(text = stringResource(R.string.slice_mode), style = MaterialTheme.typography.labelMedium)
                     }
                 }
@@ -97,12 +108,14 @@ fun ImageControlPanel(
                 MainButton(
                     title = stringResource(R.string.save),
                     onClick = { onAction(ImageAction.SaveAndOpen) },
-                    modifier.weight(0.5f)
+                    enabled = isEnabled,
+                    modifier = modifier.weight(0.5f)
                 )
                 SecondaryButton(
                     title = stringResource(R.string.open),
                     onClick = { launcher.launch("image/*") },
-                    modifier.weight(0.3f)
+                    enabled = isEnabled,
+                    modifier = modifier.weight(0.3f)
                 )
             }
             Spacer(Modifier.padding(top = Dimensions.PaddingSmall))
@@ -110,19 +123,30 @@ fun ImageControlPanel(
     }
 }
 
+fun determineIsEnabledByStatus(status: Status): Boolean = when (status) {
+    Status.IDLE -> true
+    Status.PROCESSING -> false
+    Status.COMPLETED -> true
+    Status.ERROR -> true
+}
 
 
 
 
 
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//fun ImageControlPanelPreview(){
-//    EtereumTheme {
-//        Scaffold { innerPadding ->
-//            ImageControlPanel(modifier = Modifier
-//                .fillMaxSize()
-//                .padding(innerPadding))
-//        }
-//    }
-//}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun ImageControlPanelPreview(){
+    EtereumTheme {
+        Scaffold { innerPadding ->
+            ImageControlPanel(
+                state = ImageEditState(imageStatus = Status.COMPLETED),
+                onAction = {},
+                isEnabled = determineIsEnabledByStatus(Status.COMPLETED),
+                modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding))
+        }
+    }
+}

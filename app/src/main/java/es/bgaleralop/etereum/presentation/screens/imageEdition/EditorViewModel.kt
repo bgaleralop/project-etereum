@@ -65,7 +65,8 @@ class EditorViewModel @Inject constructor(
             is ImageAction.ChangeFormat -> {
                 Log.i(TAG, "Cambiando formato de imagen...")
                 state = state.copy(
-                    targetFormat = action.format
+                    targetFormat = action.format,
+                    imageStatus = Status.PROCESSING
                 )
                 processInRealTime()
             }
@@ -99,15 +100,20 @@ class EditorViewModel @Inject constructor(
             }
             ImageAction.ProcessPreview -> {
                 Log.i(TAG, "Procesando imagen en tiempo real...")
+                state = state.copy(imageStatus = Status.PROCESSING)
                 processInRealTime()
             }
             ImageAction.Save -> {
                 Log.i(TAG, "Guardando imagen...")
+                state = state.copy(imageStatus = Status.PROCESSING)
                 saveImage(openAfter = false)
+                state = state.copy(imageStatus = Status.COMPLETED)
             }
             ImageAction.SaveAndOpen -> {
+                state = state.copy(imageStatus = Status.PROCESSING)
                 Log.i(TAG, "Guardando y abriendo imagen...")
                 saveImage(openAfter = true)
+                state = state.copy(imageStatus = Status.COMPLETED)
             }
             ImageAction.Share -> {
                 Log.i(TAG, "Compartiendo imagen...")
@@ -115,7 +121,7 @@ class EditorViewModel @Inject constructor(
             ImageAction.ToggleGrayScale -> {
                 Log.i(TAG, "Cambiando escala de grises...")
                 state = state.copy(
-                    isGrayScale = !state.isGrayScale
+                    isGrayScale = !state.isGrayScale,
                 )
                 processInRealTime()
             }
@@ -126,7 +132,7 @@ class EditorViewModel @Inject constructor(
                     Log.i(TAG, "No sanitizando imagen...")
                 }
                 state = state.copy(
-                    shouldSanitize = !state.shouldSanitize
+                    shouldSanitize = !state.shouldSanitize,
                 )
                 processInRealTime()
             }
@@ -136,7 +142,7 @@ class EditorViewModel @Inject constructor(
             }
             is ImageAction.UpdateQuality -> {
                 Log.i(TAG, "Actualizando calidad de imagen...")
-                state = state.copy(quality = action.quality)
+                state = state.copy(quality = action.quality, imageStatus = Status.PROCESSING)
                 processInRealTime()
             }
             ImageAction.ToogleSliceMode -> {
@@ -147,6 +153,8 @@ class EditorViewModel @Inject constructor(
 
     private fun processInRealTime() {
         if (state.originalBitmap != null) {
+            Log.d(TAG, "Procesando imagen.")
+            state = state.copy(imageStatus = Status.PROCESSING)
             Log.d(TAG, "original bitmap: ${state.originalBitmap}")
             viewModelScope.launch(Dispatchers.Default) {
                 //Aquí se genera el modifiedBitmap
@@ -162,11 +170,15 @@ class EditorViewModel @Inject constructor(
                     } else {
                         it.weightInBytes
                     }
-                    state = state.copy(modifiedBitmap = it.copy(weightInBytes = weight))
+                    state = state.copy(
+                        modifiedBitmap = it.copy(weightInBytes = weight),
+                        imageStatus = Status.COMPLETED)
+                    Log.d(TAG, "Imagen procesada correctamente")
                     calculateSavingPercentage()
                 }.onFailure {
                     Log.e(TAG, "Error al procesar imagen: ${it.message}")
                     _uiEvent.send(UiEvent.Error(it.message ?: "Error al procesar imagen"))
+                    state = state.copy(imageStatus = Status.ERROR)
                 }
             }
         }

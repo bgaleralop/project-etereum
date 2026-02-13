@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.core.graphics.createBitmap
+import es.bgaleralop.etereum.domain.common.Status
 import es.bgaleralop.etereum.domain.images.model.ImageProcessResult
 import es.bgaleralop.etereum.presentation.theme.EtereumTheme
 import es.bgaleralop.etereum.presentation.theme.TacticalAmber
@@ -78,10 +79,15 @@ fun EditScreen(
             Column(modifier = modifier.fillMaxSize()) {
                 WeightComparisonBadge(state = state, savingPercentaje = state.savingPercentage)
                 Box(modifier = Modifier.weight(1.2f)) {
-                    ComparisonSliderLayout(original = state.originalBitmap.image, modified = state.modifiedBitmap?.image)
+                    ComparisonSliderLayout(
+                        original = state.originalBitmap.image,
+                        modified = state.modifiedBitmap?.image,
+                        imageStatus = state.imageStatus
+                    )
                 }
                 ImageControlPanel(
                     state = state,
+                    isEnabled = determineIsEnabledByStatus(state.imageStatus),
                     onAction = onAction,
                 )
             }
@@ -92,10 +98,18 @@ fun EditScreen(
                     Box(modifier = Modifier.weight(1.2f)) {
                         if (state.isForcedSlider){
                             WeightComparisonBadge(state = state, savingPercentaje = state.savingPercentage, modifier = Modifier.zIndex(2f))
-                            ComparisonSliderLayout(original = state.originalBitmap.image, modified = state.modifiedBitmap?.image)
+                            ComparisonSliderLayout(
+                                original = state.originalBitmap.image,
+                                modified = state.modifiedBitmap?.image,
+                                imageStatus = state.imageStatus
+                            )
                         } else {
                             WeightComparisonBadge(state = state, savingPercentaje = state.savingPercentage, modifier = Modifier.zIndex(2f))
-                            ComparisonSideBySideLayout(original = state.originalBitmap.image, modified = state.modifiedBitmap?.image)
+                            ComparisonSideBySideLayout(
+                                original = state.originalBitmap.image,
+                                modified = state.modifiedBitmap?.image,
+                                imageStatus = state.imageStatus
+                            )
                         }
                     }
 
@@ -103,6 +117,7 @@ fun EditScreen(
                         state = state,
                         onAction = onAction,
                         isPortrait = false,
+                        isEnabled = determineIsEnabledByStatus(state.imageStatus),
                         modifier = Modifier.weight(0.7f)
                     )
                 }
@@ -136,9 +151,21 @@ fun EditScreenPreview() {
 )
 @Composable
 fun EditScreenPreviewLandScape() {
+    val image = ImageProcessResult(
+        image = createBitmap(2000, 4000),
+        weightInBytes = 4000,
+        isSanitized = false,
+    )
     EtereumTheme {
         Scaffold { innerPadding ->
-            EditScreen(ImageEditState(), onAction = {}, modifier = Modifier.fillMaxSize().padding(innerPadding))
+            EditScreen(
+                ImageEditState(
+                    originalBitmap = image,
+                    modifiedBitmap = image,
+                    imageStatus = Status.PROCESSING
+                ),
+                onAction = {},
+                modifier = Modifier.fillMaxSize().padding(innerPadding))
         }
     }
 }
