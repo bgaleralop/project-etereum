@@ -21,6 +21,7 @@ sealed interface ImageAction {
     data object Save : ImageAction
     data object SaveAndOpen : ImageAction
     data object  Share : ImageAction
+    data object OpenCroopTool : ImageAction
 
     data object ToogleSliceMode : ImageAction
 }
