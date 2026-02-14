@@ -1,4 +1,4 @@
-package es.bgaleralop.etereum.presentation.screens.imageEdition
+package es.bgaleralop.etereum.presentation.screens.imageEdition.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import es.bgaleralop.etereum.domain.common.formatSize
+import es.bgaleralop.etereum.presentation.screens.imageEdition.ImageEditState
 import es.bgaleralop.etereum.presentation.theme.Dimensions
 import es.bgaleralop.etereum.presentation.theme.EtereumTheme
 import es.bgaleralop.etereum.presentation.theme.TacticalAmber

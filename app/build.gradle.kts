@@ -58,6 +58,8 @@ dependencies {
 
     // Imágenes
     implementation(libs.coil.compose)
+    // Herramienta para la edición de imágenes.
+    implementation(libs.android.image.cropper)
     // Icons
     implementation(libs.androidx.compose.material.icons.core)
     implementation(libs.androidx.compose.material.icons.extended)

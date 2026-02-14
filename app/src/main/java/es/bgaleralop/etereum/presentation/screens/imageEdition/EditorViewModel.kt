@@ -148,6 +148,9 @@ class EditorViewModel @Inject constructor(
             ImageAction.ToogleSliceMode -> {
                 state = state.copy(isForcedSlider = !state.isForcedSlider)
             }
+            ImageAction.OpenCroopTool -> {
+                Log.i(TAG, "Abriendo editor de imágenes...")
+            }
         }
     }
 
